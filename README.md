@@ -236,13 +236,21 @@ Docker deployment configuration is available for production use. See the followi
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for Docker deployment
 - **[DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md)** - Complete Docker deployment documentation
 - **[PORT_REFERENCE.md](PORT_REFERENCE.md)** - Port configuration and Nginx Proxy Manager setup
-- **[documentation/](documentation/)** - Authentik and Nginx Proxy Manager setup guides
+- **[documentation/](documentation/)** - Comprehensive setup guides
 
 ### Authentication & Reverse Proxy Setup
 
 For production deployment with authentication:
 
 - **[documentation/authentik-setup.md](documentation/authentik-setup.md)** - Configure authentik as proxy provider
+- **[documentation/nginx-proxy-manager-setup.md](documentation/nginx-proxy-manager-setup.md)** - Set up Nginx Proxy Manager with authentik
+
+### Certificate Templates & Email Setup
+
+For certificate customization and email delivery:
+
+- **[documentation/certificate-templates.md](documentation/certificate-templates.md)** - Create and customize certificate templates
+- **[documentation/smtp-provider-setup.md](documentation/smtp-provider-setup.md)** - Configure SMTP providers (Brevo, Gmail, SendGrid, etc.)
 - **[documentation/nginx-proxy-manager-setup.md](documentation/nginx-proxy-manager-setup.md)** - Set up Nginx Proxy Manager with authentik
 
 ### Quick Start

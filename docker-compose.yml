@@ -39,6 +39,14 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-postgres}
       - PORT=3001
       - NODE_ENV=production
+      - SMTP_HOST=${SMTP_HOST:-smtp-relay.brevo.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_SECURE=${SMTP_SECURE:-false}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - SMTP_FROM=${SMTP_FROM:-"GDGoC Certificates" <noreply@gdg-oncampus.dev>}
+      - PUBLIC_HOSTNAME=${PUBLIC_HOSTNAME:-certs.gdg-oncampus.dev}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-https://sudo.certs-admin.certs.gdg-oncampus.dev,https://certs.gdg-oncampus.dev}
     depends_on:
       db:
         condition: service_healthy

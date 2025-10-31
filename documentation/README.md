@@ -41,6 +41,47 @@ Complete guide for setting up Nginx Proxy Manager as a reverse proxy with authen
 - Header forwarding configuration
 - SSL/TLS setup
 
+### [certificate-templates.md](certificate-templates.md)
+Complete guide for creating and customizing certificate templates.
+
+**Contents:**
+- Certificate template requirements and design guidelines
+- Creating SVG and HTML/CSS templates
+- Template placeholder syntax
+- Integrating templates with the application
+- PDF generation setup with Puppeteer
+- Template storage options (local, database, cloud)
+- Per-organization customization
+- Testing and troubleshooting
+
+**Key Topics:**
+- Template design specifications (dimensions, colors, fonts)
+- SVG template creation with Inkscape/Illustrator
+- HTML/CSS template structure
+- Server-side rendering with Puppeteer
+- Dockerfile configuration for Chromium
+- Dynamic template selection
+
+### [smtp-provider-setup.md](smtp-provider-setup.md)
+Complete guide for configuring SMTP providers to send certificate emails.
+
+**Contents:**
+- SMTP environment variable configuration
+- Step-by-step setup for popular providers (Brevo, Gmail, SendGrid, Mailgun, AWS SES, Postmark, Microsoft 365)
+- Testing SMTP configuration
+- Email delivery troubleshooting
+- DNS configuration for better deliverability (SPF, DKIM, DMARC)
+- Email queue implementation
+- Monitoring and analytics
+
+**Key Topics:**
+- Brevo setup (recommended for GDGoC)
+- Gmail with App Passwords
+- SendGrid API configuration
+- Amazon SES production access
+- Rate limiting and best practices
+- Handling bounces and spam issues
+
 ## Quick Start
 
 Follow these guides in order:
