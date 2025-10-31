@@ -270,7 +270,15 @@ router.post('/bulk', extractAuthentikUser, async (req, res) => {
  */
 router.get('/', extractAuthentikUser, async (req, res) => {
   const { ocid } = req.user;
-  const { limit = 50, offset = 0 } = req.query;
+  
+  // Validate and sanitize query parameters
+  let limit = parseInt(req.query.limit) || 50;
+  let offset = parseInt(req.query.offset) || 0;
+  
+  // Set bounds to prevent performance issues
+  if (limit < 1) limit = 1;
+  if (limit > 100) limit = 100;
+  if (offset < 0) offset = 0;
 
   try {
     const query = `
@@ -291,8 +299,8 @@ router.get('/', extractAuthentikUser, async (req, res) => {
 
     res.json({
       total: parseInt(count.rows[0].count),
-      limit: parseInt(limit),
-      offset: parseInt(offset),
+      limit,
+      offset,
       certificates: certificates.rows
     });
 
@@ -301,47 +309,6 @@ router.get('/', extractAuthentikUser, async (req, res) => {
     res.status(500).json({
       error: 'Internal server error',
       message: 'Failed to fetch certificates'
-    });
-  }
-});
-
-/**
- * GET /api/validate/:uniqueId
- * Public endpoint to validate a certificate
- * NO AUTHENTICATION REQUIRED
- */
-router.get('/validate/:uniqueId', async (req, res) => {
-  const { uniqueId } = req.params;
-
-  try {
-    const query = `
-      SELECT 
-        unique_id, recipient_name, event_type, event_name, 
-        issue_date, issuer_name, org_name, pdf_url
-      FROM certificates 
-      WHERE unique_id = $1
-    `;
-
-    const result = await pool.query(query, [uniqueId]);
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({
-        error: 'Not found',
-        message: 'Certificate not found',
-        valid: false
-      });
-    }
-
-    res.json({
-      valid: true,
-      certificate: result.rows[0]
-    });
-
-  } catch (error) {
-    console.error('Error validating certificate:', error);
-    res.status(500).json({
-      error: 'Internal server error',
-      message: 'Failed to validate certificate'
     });
   }
 });

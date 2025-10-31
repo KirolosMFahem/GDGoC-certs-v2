@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile.js';
 import certificatesRoutes from './routes/certificates.js';
+import validateRoutes from './routes/validate.js';
 import { verifyEmailService } from './services/emailService.js';
 
 // Load environment variables
@@ -62,7 +63,8 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
-app.use('/api', certificatesRoutes);
+app.use('/api/certificates', certificatesRoutes);
+app.use('/api/validate', validateRoutes);
 
 // 404 handler
 app.use((req, res) => {
