@@ -103,69 +103,27 @@ If you have your own SSL certificates:
    - **Intermediate Certificate**: (Optional) CA bundle
 4. Click **Save**
 
-## Step 3: Configure Authentik Access List
+## Step 3: Understanding Authentik Forward Auth
 
-### Create Authentik Forward Auth Configuration
+Authentik forward authentication will be configured directly in each Proxy Host that requires authentication. NPM doesn't use Access Lists for forward auth - instead, we'll add custom Nginx configuration to each protected proxy host.
 
-1. In NPM, navigate to **Access Lists** → **Add Access List**
-2. Configure:
-   - **Name**: `Authentik Forward Auth`
-   - **Satisfy Any**: Check (allows access if any condition is met)
+**Note**: In Nginx Proxy Manager, Access Lists are for basic IP whitelisting or HTTP authentication. For authentik forward auth, we configure it directly in the Proxy Host's Advanced tab (see Step 4 below).
 
-3. Go to **Authorization** tab
-4. Add custom configuration:
+### How Forward Auth Works
 
-```nginx
-# Forward auth to authentik
-auth_request /outpost.goauthentik.io/auth/nginx;
-
-# Preserve original request URI
-auth_request_set $auth_cookie $upstream_http_set_cookie;
-add_header Set-Cookie $auth_cookie;
-
-# Forward authentik user headers
-auth_request_set $authentik_username $upstream_http_x_authentik_username;
-auth_request_set $authentik_groups $upstream_http_x_authentik_groups;
-auth_request_set $authentik_email $upstream_http_x_authentik_email;
-auth_request_set $authentik_name $upstream_http_x_authentik_name;
-auth_request_set $authentik_uid $upstream_http_x_authentik_uid;
-
-proxy_set_header X-authentik-username $authentik_username;
-proxy_set_header X-authentik-groups $authentik_groups;
-proxy_set_header X-authentik-email $authentik_email;
-proxy_set_header X-authentik-name $authentik_name;
-proxy_set_header X-authentik-uid $authentik_uid;
-
-# Redirect to authentik login on auth error
-error_page 401 = @authelia_proxy_signin;
-```
-
-5. Add this location block in **Advanced** tab:
-
-```nginx
-location @authelia_proxy_signin {
-    internal;
-    return 302 https://auth.gdg-oncampus.dev/outpost.goauthentik.io/start?rd=$scheme://$http_host$request_uri;
-}
-
-location /outpost.goauthentik.io {
-    proxy_pass https://auth.gdg-oncampus.dev/outpost.goauthentik.io;
-    proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $remote_addr;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header X-Forwarded-Host $http_host;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-}
-```
-
-6. Click **Save**
+1. User accesses protected resource (e.g., admin interface)
+2. NPM checks authentik via `/outpost.goauthentik.io/auth/nginx`
+3. If not authenticated:
+   - Redirect to authentik login page
+   - User logs in
+   - Redirect back to original URL
+4. If authenticated:
+   - Authentik injects user headers
+   - NPM forwards request with headers to application
 
 ## Step 4: Configure Admin Interface Proxy Host
 
-### Admin Interface (Protected)
+### Admin Interface (Protected with Authentik)
 
 1. Navigate to **Hosts** → **Proxy Hosts** → **Add Proxy Host**
 
@@ -189,10 +147,24 @@ location /outpost.goauthentik.io {
 
 #### Advanced Tab
 
-Add this configuration:
+Add this configuration for authentik forward auth:
 
 ```nginx
-# Forward authentik headers to the application
+# Forward auth to authentik
+auth_request /outpost.goauthentik.io/auth/nginx;
+
+# Preserve authentication cookie
+auth_request_set $auth_cookie $upstream_http_set_cookie;
+add_header Set-Cookie $auth_cookie;
+
+# Get authentik user headers
+auth_request_set $authentik_username $upstream_http_x_authentik_username;
+auth_request_set $authentik_groups $upstream_http_x_authentik_groups;
+auth_request_set $authentik_email $upstream_http_x_authentik_email;
+auth_request_set $authentik_name $upstream_http_x_authentik_name;
+auth_request_set $authentik_uid $upstream_http_x_authentik_uid;
+
+# Forward application traffic
 location / {
     proxy_pass http://frontend:80;
     proxy_set_header Host $host;
@@ -200,18 +172,39 @@ location / {
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
     
-    # Pass authentik user information
+    # Pass authentik user information to application
     proxy_set_header X-authentik-username $authentik_username;
     proxy_set_header X-authentik-groups $authentik_groups;
     proxy_set_header X-authentik-email $authentik_email;
     proxy_set_header X-authentik-name $authentik_name;
     proxy_set_header X-authentik-uid $authentik_uid;
 }
+
+# Authentik outpost endpoint
+location /outpost.goauthentik.io {
+    proxy_pass https://auth.gdg-oncampus.dev/outpost.goauthentik.io;
+    proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+# Redirect to authentik login on auth failure
+location @goauthentik_proxy_signin {
+    internal;
+    return 302 https://auth.gdg-oncampus.dev/outpost.goauthentik.io/start?rd=$scheme://$http_host$request_uri;
+}
+
+error_page 401 = @goauthentik_proxy_signin;
 ```
 
 #### Access List Tab
 
-- **Access List**: Select `Authentik Forward Auth` (created in Step 3)
+- **Access List**: None (authentication handled by authentik forward auth)
 
 Click **Save**.
 

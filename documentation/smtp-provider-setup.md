@@ -20,7 +20,7 @@ SMTP settings are configured in the root `.env` file:
 # SMTP Configuration
 SMTP_HOST=smtp.example.com        # SMTP server hostname
 SMTP_PORT=587                      # SMTP port (25, 465, 587, 2525)
-SMTP_SECURE=false                  # Use SSL/TLS (true for port 465, false for 587)
+SMTP_SECURE=starttls               # Security type: starttls, ssl, or none
 SMTP_USER=your-username            # SMTP authentication username
 SMTP_PASS=your-password            # SMTP authentication password
 SMTP_FROM="Sender Name" <email@example.com>  # From address
@@ -31,10 +31,33 @@ PUBLIC_HOSTNAME=certs.gdg-oncampus.dev
 
 ### SMTP Security Options
 
-- **Port 25**: Plain SMTP (not recommended, often blocked)
-- **Port 465**: SMTP over SSL (SMTP_SECURE=true)
-- **Port 587**: SMTP with STARTTLS (SMTP_SECURE=false, recommended)
-- **Port 2525**: Alternative port (often used by cloud providers)
+The `SMTP_SECURE` variable controls the encryption method:
+
+- **starttls** (Recommended): Use STARTTLS encryption
+  - Port: 587
+  - Starts as plain connection, upgrades to TLS
+  - Most modern SMTP servers support this
+  
+- **ssl**: Use SSL/TLS encryption
+  - Port: 465
+  - Encrypted from the start
+  - Also called "implicit TLS"
+  
+- **none**: No encryption (not recommended)
+  - Port: 25 or 2525
+  - Plain text connection
+  - Often blocked by ISPs and cloud providers
+
+**Recommendation**: Use `starttls` with port 587 for best compatibility and security.
+
+### Port and Security Combinations
+
+| Port | SMTP_SECURE | Description | Recommended |
+|------|-------------|-------------|-------------|
+| 587 | `starttls` | STARTTLS (upgrade to TLS) | ✅ Yes |
+| 465 | `ssl` | SSL/TLS (implicit) | ✅ Yes |
+| 25 | `none` | Plain SMTP | ❌ No (blocked) |
+| 2525 | `starttls` or `none` | Alternative port | ⚠️ If needed |
 
 ## Supported SMTP Providers
 
@@ -66,7 +89,7 @@ PUBLIC_HOSTNAME=certs.gdg-oncampus.dev
    ```bash
    SMTP_HOST=smtp-relay.brevo.com
    SMTP_PORT=587
-   SMTP_SECURE=false
+   SMTP_SECURE=starttls
    SMTP_USER=your-email@example.com
    SMTP_PASS=your-generated-smtp-key
    SMTP_FROM="GDGoC Certificates" <noreply@yourdomain.com>
@@ -108,7 +131,7 @@ PUBLIC_HOSTNAME=certs.gdg-oncampus.dev
    ```bash
    SMTP_HOST=smtp.gmail.com
    SMTP_PORT=587
-   SMTP_SECURE=false
+   SMTP_SECURE=starttls
    SMTP_USER=your-email@gmail.com
    SMTP_PASS=your-16-char-app-password
    SMTP_FROM="GDGoC Certificates" <your-email@gmail.com>
@@ -148,7 +171,7 @@ PUBLIC_HOSTNAME=certs.gdg-oncampus.dev
    ```bash
    SMTP_HOST=smtp.sendgrid.net
    SMTP_PORT=587
-   SMTP_SECURE=false
+   SMTP_SECURE=starttls
    SMTP_USER=apikey
    SMTP_PASS=your-sendgrid-api-key
    SMTP_FROM="GDGoC Certificates" <verified@yourdomain.com>
@@ -187,7 +210,7 @@ PUBLIC_HOSTNAME=certs.gdg-oncampus.dev
    ```bash
    SMTP_HOST=smtp.mailgun.org
    SMTP_PORT=587
-   SMTP_SECURE=false
+   SMTP_SECURE=starttls
    SMTP_USER=postmaster@yourdomain.mailgun.org
    SMTP_PASS=your-mailgun-smtp-password
    SMTP_FROM="GDGoC Certificates" <noreply@yourdomain.com>
@@ -232,7 +255,7 @@ PUBLIC_HOSTNAME=certs.gdg-oncampus.dev
    ```bash
    SMTP_HOST=email-smtp.us-east-1.amazonaws.com
    SMTP_PORT=587
-   SMTP_SECURE=false
+   SMTP_SECURE=starttls
    SMTP_USER=your-ses-smtp-username
    SMTP_PASS=your-ses-smtp-password
    SMTP_FROM="GDGoC Certificates" <verified@yourdomain.com>
@@ -265,7 +288,7 @@ PUBLIC_HOSTNAME=certs.gdg-oncampus.dev
    ```bash
    SMTP_HOST=smtp.postmarkapp.com
    SMTP_PORT=587
-   SMTP_SECURE=false
+   SMTP_SECURE=starttls
    SMTP_USER=your-postmark-server-token
    SMTP_PASS=your-postmark-server-token
    SMTP_FROM="GDGoC Certificates" <verified@yourdomain.com>
@@ -297,7 +320,7 @@ PUBLIC_HOSTNAME=certs.gdg-oncampus.dev
    ```bash
    SMTP_HOST=smtp.office365.com
    SMTP_PORT=587
-   SMTP_SECURE=false
+   SMTP_SECURE=starttls
    SMTP_USER=your-email@yourdomain.com
    SMTP_PASS=your-password
    SMTP_FROM="GDGoC Certificates" <your-email@yourdomain.com>
@@ -323,7 +346,7 @@ dotenv.config({ path: '../.env' });
 const transporter = nodemailer.createTransporter({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT),
-  secure: process.env.SMTP_SECURE === 'true',
+  secure: process.env.SMTP_SECURE === 'ssl',
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS
@@ -387,7 +410,7 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransporter({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true',
+  secure: process.env.SMTP_SECURE === 'ssl',
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS
@@ -460,8 +483,8 @@ export async function sendCertificateEmail(recipientEmail, certificateData) {
 
 **Solutions:**
 1. Verify SMTP_SECURE matches port:
-   - Port 465: SMTP_SECURE=true
-   - Port 587: SMTP_SECURE=false
+   - Port 465: SMTP_SECURE=ssl
+   - Port 587: SMTP_SECURE=starttls
 2. Update Node.js to latest version
 3. Check server certificates are valid
 
