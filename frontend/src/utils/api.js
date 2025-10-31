@@ -1,5 +1,14 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+class APIError extends Error {
+  constructor(status, message, data) {
+    super(message);
+    this.name = 'APIError';
+    this.status = status;
+    this.data = data;
+  }
+}
+
 /**
  * Make an API request
  * @param {string} endpoint - API endpoint (e.g., '/api/auth/me')
@@ -22,23 +31,23 @@ async function apiRequest(endpoint, options = {}) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw {
-        status: response.status,
-        message: data.message || data.error || 'An error occurred',
+      throw new APIError(
+        response.status,
+        data.message || data.error || 'An error occurred',
         data
-      };
+      );
     }
 
     return data;
   } catch (error) {
-    if (error.status) {
+    if (error instanceof APIError) {
       throw error;
     }
-    throw {
-      status: 0,
-      message: 'Network error. Please check your connection.',
-      error
-    };
+    throw new APIError(
+      0,
+      'Network error. Please check your connection.',
+      { originalError: error }
+    );
   }
 }
 

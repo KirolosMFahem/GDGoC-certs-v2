@@ -18,9 +18,14 @@ const transporter = nodemailer.createTransport({
  * @param {string} params.recipientName - Recipient name
  * @param {string} params.eventName - Event name
  * @param {string} params.uniqueId - Certificate unique ID
- * @param {string} params.pdfUrl - URL to certificate PDF (optional)
+ * @param {string} [params.pdfUrl] - URL to certificate PDF (optional)
  */
-export async function sendCertificateEmail({ to, recipientName, eventName, uniqueId, pdfUrl }) {
+export async function sendCertificateEmail({ to, recipientName, eventName, uniqueId, pdfUrl = null }) {
+  // Validate required parameters
+  if (!to || !recipientName || !eventName || !uniqueId) {
+    throw new Error('Missing required parameters for sending certificate email');
+  }
+
   const validationUrl = `https://certs.gdg-oncampus.dev/?cert=${uniqueId}`;
   
   const htmlContent = `

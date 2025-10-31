@@ -1,19 +1,20 @@
 import { AuthProvider } from './contexts/AuthContext';
 import AdminApp from './components/AdminApp';
 import PublicValidationPage from './pages/PublicValidationPage';
+import { HOSTNAMES } from './config';
 
 function App() {
   const hostname = window.location.hostname;
 
   // Route based on hostname
-  if (hostname === 'sudo.certs-admin.certs.gdg-oncampus.dev' || hostname === 'localhost') {
+  if (hostname === HOSTNAMES.ADMIN || hostname === HOSTNAMES.DEV) {
     // Admin interface
     return (
       <AuthProvider>
         <AdminApp />
       </AuthProvider>
     );
-  } else if (hostname === 'certs.gdg-oncampus.dev') {
+  } else if (hostname === HOSTNAMES.PUBLIC) {
     // Public validation page
     return <PublicValidationPage />;
   }

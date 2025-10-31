@@ -14,12 +14,14 @@ const PORT = process.env.PORT || 3001;
 
 // CORS Configuration
 // Only allow requests from the admin and public certificate domains
-const allowedOrigins = [
-  'https://sudo.certs-admin.certs.gdg-oncampus.dev',
-  'https://certs.gdg-oncampus.dev',
-  'http://localhost:5173', // For local development
-  'http://localhost:3000'  // For local development
-];
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+  : [
+      'https://sudo.certs-admin.certs.gdg-oncampus.dev',
+      'https://certs.gdg-oncampus.dev',
+      'http://localhost:5173', // For local development
+      'http://localhost:3000'  // For local development
+    ];
 
 app.use(cors({
   origin: (origin, callback) => {

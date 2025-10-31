@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '../utils/api';
+import { HOSTNAMES } from '../config';
 
 const AuthContext = createContext(null);
 
@@ -12,7 +13,7 @@ export function AuthProvider({ children }) {
     // Only fetch user if we're on the admin domain
     const hostname = window.location.hostname;
     
-    if (hostname === 'sudo.certs-admin.certs.gdg-oncampus.dev' || hostname === 'localhost') {
+    if (hostname === HOSTNAMES.ADMIN || hostname === HOSTNAMES.DEV) {
       fetchUser();
     } else {
       // Not on admin domain, no need to authenticate
