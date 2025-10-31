@@ -213,6 +213,10 @@ Locations:
 
 **Important**: Make sure Nginx Proxy Manager is on the same Docker network (`gdgoc-net`) or can route to it.
 
+**For detailed setup instructions**:
+- [Authentik Setup Guide](documentation/authentik-setup.md) - Complete authentik configuration
+- [Nginx Proxy Manager Setup Guide](documentation/nginx-proxy-manager-setup.md) - NPM configuration with authentik integration
+
 ## Management Commands
 
 ### Start/Stop Services
