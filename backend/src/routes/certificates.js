@@ -1,5 +1,5 @@
 import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 import pool from '../db/index.js';
 import { extractAuthentikUser } from '../middleware/auth.js';
 import { sendCertificateEmail } from '../services/emailService.js';
@@ -8,12 +8,12 @@ import { certificateLimiter, apiLimiter } from '../middleware/rateLimiter.js';
 const router = express.Router();
 
 /**
- * Generate a unique certificate ID
+ * Generate a unique certificate ID using cryptographically secure random values
  */
 function generateUniqueId() {
   const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 8);
-  return `GDGOC-${timestamp}-${random}`.toUpperCase();
+  const randomBytes = crypto.randomBytes(4).toString('hex');
+  return `GDGOC-${timestamp}-${randomBytes}`.toUpperCase();
 }
 
 /**

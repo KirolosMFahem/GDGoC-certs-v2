@@ -49,7 +49,8 @@ export async function sendCertificateEmail({ to, recipientName, eventName, uniqu
   const safeUniqueId = escapeHtml(uniqueId);
   const safePdfUrl = pdfUrl ? escapeHtml(pdfUrl) : null;
 
-  const validationUrl = `https://certs.gdg-oncampus.dev/?cert=${encodeURIComponent(uniqueId)}`;
+  const publicHostname = process.env.PUBLIC_HOSTNAME || 'certs.gdg-oncampus.dev';
+  const validationUrl = `https://${publicHostname}/?cert=${encodeURIComponent(uniqueId)}`;
   
   const htmlContent = `
     <!DOCTYPE html>
