@@ -107,6 +107,12 @@ case $COMMAND in
         DATE=$(date +%Y%m%d_%H%M%S)
         BACKUP_FILE="$BACKUP_DIR/db_$DATE.sql"
         
+        echo "Checking database health..."
+        if ! docker compose ps db | grep -q "Up"; then
+            echo -e "${RED}Error: Database service is not running${NC}"
+            exit 1
+        fi
+        
         echo "Creating database backup..."
         docker compose exec -T db pg_dump -U postgres gdgoc_certs > "$BACKUP_FILE"
         echo -e "${GREEN}✓ Backup created: $BACKUP_FILE${NC}"

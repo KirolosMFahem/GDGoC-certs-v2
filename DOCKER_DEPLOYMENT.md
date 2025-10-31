@@ -36,10 +36,10 @@ nano backend/.env
 
 ```bash
 # Build all services
-docker-compose build
+docker compose build
 
 # Start all services in detached mode
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 3. Verify Deployment
@@ -47,7 +47,7 @@ docker-compose up -d
 Check that all services are running:
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 Expected output:
@@ -62,10 +62,10 @@ Check service logs:
 
 ```bash
 # All services
-docker-compose logs -f
+docker compose logs -f
 
 # Specific service
-docker-compose logs -f backend
+docker compose logs -f backend
 ```
 
 ### 4. Access the Application
@@ -113,7 +113,7 @@ All services communicate through a custom bridge network named `gdgoc-net`. This
 When building the frontend, you can pass build arguments:
 
 ```bash
-docker-compose build --build-arg VITE_API_URL=https://api.your-domain.com frontend
+docker compose build --build-arg VITE_API_URL=https://api.your-domain.com frontend
 ```
 
 Or set them in a `.env` file in the root directory:
@@ -182,66 +182,66 @@ Locations:
 
 ```bash
 # Start all services
-docker-compose up -d
+docker compose up -d
 
 # Stop all services
-docker-compose down
+docker compose down
 
 # Stop and remove volumes (CAUTION: deletes database)
-docker-compose down -v
+docker compose down -v
 ```
 
 ### View Logs
 
 ```bash
 # All services (follow mode)
-docker-compose logs -f
+docker compose logs -f
 
 # Specific service
-docker-compose logs -f backend
-docker-compose logs -f frontend
-docker-compose logs -f db
+docker compose logs -f backend
+docker compose logs -f frontend
+docker compose logs -f db
 
 # Last 100 lines
-docker-compose logs --tail=100
+docker compose logs --tail=100
 ```
 
 ### Rebuild Services
 
 ```bash
 # Rebuild all services
-docker-compose build
+docker compose build
 
 # Rebuild specific service
-docker-compose build backend
+docker compose build backend
 
 # Rebuild and restart
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 ### Database Management
 
 ```bash
 # Access PostgreSQL shell
-docker-compose exec db psql -U postgres -d gdgoc_certs
+docker compose exec db psql -U postgres -d gdgoc_certs
 
 # Backup database
-docker-compose exec db pg_dump -U postgres gdgoc_certs > backup.sql
+docker compose exec db pg_dump -U postgres gdgoc_certs > backup.sql
 
 # Restore database
-docker-compose exec -T db psql -U postgres -d gdgoc_certs < backup.sql
+docker compose exec -T db psql -U postgres -d gdgoc_certs < backup.sql
 
 # Reset database (CAUTION: deletes all data)
-docker-compose down
+docker compose down
 docker volume rm gdgoc-postgres-data
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Service Health Checks
 
 ```bash
 # Check service status
-docker-compose ps
+docker compose ps
 
 # Check health of specific service
 docker inspect gdgoc-backend | grep -A 10 Health
@@ -253,12 +253,12 @@ docker inspect gdgoc-backend | grep -A 10 Health
 
 1. Check logs:
    ```bash
-   docker-compose logs service-name
+   docker compose logs service-name
    ```
 
 2. Verify environment variables:
    ```bash
-   docker-compose config
+   docker compose config
    ```
 
 3. Check if ports are already in use (if exposing ports)
@@ -267,12 +267,12 @@ docker inspect gdgoc-backend | grep -A 10 Health
 
 1. Verify database is healthy:
    ```bash
-   docker-compose ps db
+   docker compose ps db
    ```
 
 2. Check backend can reach database:
    ```bash
-   docker-compose exec backend ping db
+   docker compose exec backend ping db
    ```
 
 3. Verify database credentials in `backend/.env`
@@ -281,17 +281,17 @@ docker inspect gdgoc-backend | grep -A 10 Health
 
 1. Check if build succeeded:
    ```bash
-   docker-compose logs frontend
+   docker compose logs frontend
    ```
 
 2. Verify build arguments were passed correctly:
    ```bash
-   docker-compose config | grep -A 5 "build:"
+   docker compose config | grep -A 5 "build:"
    ```
 
 3. Access frontend container and check files:
    ```bash
-   docker-compose exec frontend ls -la /usr/share/nginx/html
+   docker compose exec frontend ls -la /usr/share/nginx/html
    ```
 
 ### Email Not Sending
@@ -299,11 +299,11 @@ docker inspect gdgoc-backend | grep -A 10 Health
 1. Verify SMTP credentials in `backend/.env`
 2. Check backend logs for email errors:
    ```bash
-   docker-compose logs backend | grep -i email
+   docker compose logs backend | grep -i email
    ```
 3. Test SMTP connection from backend container:
    ```bash
-   docker-compose exec backend node -e "require('./src/services/emailService.js')"
+   docker compose exec backend node -e "require('./src/services/emailService.js')"
    ```
 
 ## Security Considerations
@@ -353,14 +353,14 @@ Before deploying to production:
 To scale backend instances:
 
 ```bash
-docker-compose up -d --scale backend=3
+docker compose up -d --scale backend=3
 ```
 
 **Note**: You'll need a load balancer (like Nginx Proxy Manager or HAProxy) to distribute traffic.
 
 ### Resource Limits
 
-Add resource constraints in `docker-compose.yml`:
+Add resource constraints in `docker compose.yml`:
 
 ```yaml
 services:
@@ -389,7 +389,7 @@ BACKUP_DIR="./backups"
 mkdir -p $BACKUP_DIR
 
 # Backup database
-docker-compose exec -T db pg_dump -U postgres gdgoc_certs > "$BACKUP_DIR/db_$DATE.sql"
+docker compose exec -T db pg_dump -U postgres gdgoc_certs > "$BACKUP_DIR/db_$DATE.sql"
 
 # Keep only last 7 days of backups
 find $BACKUP_DIR -name "db_*.sql" -mtime +7 -delete
@@ -428,26 +428,26 @@ docker stats gdgoc-backend gdgoc-frontend gdgoc-db
 git pull
 
 # Rebuild and restart
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 ### Update Dependencies
 
 ```bash
 # Update Docker images
-docker-compose pull
+docker compose pull
 
 # Rebuild with latest dependencies
-docker-compose build --no-cache
+docker compose build --no-cache
 
 # Restart services
-docker-compose up -d
+docker compose up -d
 ```
 
 ## Support
 
 For issues and questions:
-1. Check logs: `docker-compose logs`
+1. Check logs: `docker compose logs`
 2. Review this documentation
 3. Check GitHub repository issues
 4. Contact maintainers
