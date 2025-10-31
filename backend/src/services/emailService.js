@@ -95,7 +95,7 @@ export async function sendCertificateEmail({ to, recipientName, eventName, uniqu
   const mailOptions = {
     from: process.env.SMTP_FROM || '"GDGoC Certificates" <noreply@gdg-oncampus.dev>',
     to,
-    subject: `Your Certificate for ${safeEventName}`,
+    subject: `Your Certificate for ${eventName}`,
     html: htmlContent,
     text: `Congratulations ${recipientName}! Your certificate for ${eventName} has been generated. Certificate ID: ${uniqueId}. Validate at: ${validationUrl}`,
   };
