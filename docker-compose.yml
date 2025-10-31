@@ -18,6 +18,10 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    # Port 5432 is NOT exposed to host - accessible only via gdgoc-net network
+    # To expose for direct access: uncomment the line below
+    # ports:
+    #   - "5432:5432"
 
   # Backend API
   backend:
@@ -46,6 +50,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    # Port 3001 is NOT exposed to host - accessible only via gdgoc-net network
+    # Nginx Proxy Manager should forward to http://backend:3001
+    # To expose for direct access: uncomment the line below
+    # ports:
+    #   - "3001:3001"
 
   # Frontend (React + Nginx)
   frontend:
@@ -67,6 +76,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    # Port 80 is NOT exposed to host - accessible only via gdgoc-net network
+    # Nginx Proxy Manager should forward to http://frontend:80
+    # To expose for direct access: uncomment the line below
+    # ports:
+    #   - "8080:80"
 
 networks:
   gdgoc-net:

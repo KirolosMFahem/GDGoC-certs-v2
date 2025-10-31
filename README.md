@@ -235,6 +235,7 @@ Docker deployment configuration is available for production use. See the followi
 
 - **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for Docker deployment
 - **[DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md)** - Complete Docker deployment documentation
+- **[PORT_REFERENCE.md](PORT_REFERENCE.md)** - Port configuration and Nginx Proxy Manager setup
 
 ### Quick Start
 
@@ -249,6 +250,8 @@ cp backend/.env.example backend/.env
 # 3. Check status
 ./deploy.sh status
 ```
+
+**Important**: No ports are exposed to the host by default. Services communicate through the internal `gdgoc-net` Docker network. Configure Nginx Proxy Manager to provide external access (see PORT_REFERENCE.md).
 
 ### Docker Network
 

@@ -67,6 +67,12 @@ After deployment, services are available on the internal network:
 - Backend API: `http://backend:3001`
 - Database: `postgresql://postgres:postgres@db:5432/gdgoc_certs`
 
+**Important**: 
+- ⚠️ **No ports are exposed to the host** - this is intentional for security
+- Services are only accessible through the internal `gdgoc-net` Docker network
+- Configure Nginx Proxy Manager to expose services externally
+- See [PORT_REFERENCE.md](PORT_REFERENCE.md) for detailed port configuration
+
 **Note:** Configure Nginx Proxy Manager to expose these services externally.
 
 ## Common Commands

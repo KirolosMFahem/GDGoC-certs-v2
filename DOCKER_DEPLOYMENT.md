@@ -75,7 +75,11 @@ The services are now running on the internal Docker network (`gdgoc-net`):
 - Backend API: `http://backend:3001`
 - Database: `postgresql://postgres:postgres@db:5432/gdgoc_certs`
 
-**Note**: Services are NOT exposed to the host. You need to configure Nginx Proxy Manager to route traffic to these services.
+**Important**: 
+- ⚠️ **No ports are exposed to the host** - this is by design for security
+- All services are only accessible via the internal `gdgoc-net` Docker network
+- You need to configure Nginx Proxy Manager to route external traffic to these services
+- See [PORT_REFERENCE.md](PORT_REFERENCE.md) for detailed port configuration and how to expose ports if needed for development
 
 ## Architecture
 
@@ -105,6 +109,14 @@ All services communicate through a custom bridge network named `gdgoc-net`. This
 - Service discovery by name (e.g., `backend`, `db`, `frontend`)
 - Isolation from other Docker networks
 - No port exposure to host (security)
+
+**Port Configuration**: By default, no ports are exposed to the host machine. Services are accessible only through the internal `gdgoc-net` network. For detailed information on:
+- How to access services via Nginx Proxy Manager
+- How to temporarily expose ports for development/testing
+- Port mapping syntax and examples
+- Security considerations
+
+See the comprehensive [PORT_REFERENCE.md](PORT_REFERENCE.md) guide.
 
 ## Configuration
 
