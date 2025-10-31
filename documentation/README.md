@@ -82,6 +82,26 @@ Complete guide for configuring SMTP providers to send certificate emails.
 - Rate limiting and best practices
 - Handling bounces and spam issues
 
+### [email-templates.md](email-templates.md)
+Complete guide for creating and customizing email templates for certificate delivery.
+
+**Contents:**
+- Pre-built email templates (Default, Celebratory, Minimal, Corporate, Achievement)
+- Template variable system
+- Creating custom templates for leaders
+- Per-organization template customization
+- Email client compatibility
+- Template management and storage
+- Testing and preview tools
+
+**Key Topics:**
+- Available template variables (RECIPIENT_NAME, EVENT_NAME, CERTIFICATE_ID, etc.)
+- Template selection and customization per leader
+- HTML email best practices
+- Database schema for template storage
+- Handlebars syntax for dynamic content
+- Mobile-responsive design
+
 ## Quick Start
 
 Follow these guides in order:

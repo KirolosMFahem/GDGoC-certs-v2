@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate - {{EVENT_NAME}}</title>
+  <style>
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      line-height: 1.6;
+      color: #2c3e50;
+      background-color: #ecf0f1;
+      margin: 0;
+      padding: 0;
+    }
+    .email-wrapper {
+      width: 100%;
+      background-color: #ecf0f1;
+      padding: 30px 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border: 2px solid #34495e;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .header {
+      background-color: #34495e;
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-bottom: 4px solid #2c3e50;
+    }
+    .logo-placeholder {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 15px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .header p {
+      margin: 10px 0 0;
+      font-size: 14px;
+      opacity: 0.8;
+      font-style: italic;
+    }
+    .content {
+      padding: 40px 35px;
+    }
+    .formal-greeting {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    .content p {
+      margin-bottom: 15px;
+      font-size: 15px;
+      line-height: 1.8;
+      text-align: justify;
+    }
+    .certificate-details {
+      border: 2px solid #34495e;
+      padding: 25px;
+      margin: 30px 0;
+      background-color: #f8f9fa;
+    }
+    .certificate-details h2 {
+      margin: 0 0 20px;
+      font-size: 20px;
+      color: #2c3e50;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #34495e;
+      padding-bottom: 10px;
+    }
+    .detail-row {
+      display: flex;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    .detail-label {
+      flex: 0 0 140px;
+      font-weight: bold;
+      color: #5d6d7e;
+    }
+    .detail-value {
+      flex: 1;
+      color: #2c3e50;
+    }
+    .button-container {
+      text-align: center;
+      margin: 35px 0;
+      padding: 20px 0;
+      border-top: 1px solid #dee2e6;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .button {
+      display: inline-block;
+      padding: 14px 35px;
+      background-color: #34495e;
+      color: white !important;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 8px;
+      border: 2px solid #2c3e50;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .button:hover {
+      background-color: #ffffff;
+      color: #34495e !important;
+    }
+    .signature {
+      margin-top: 30px;
+      text-align: right;
+      font-style: italic;
+    }
+    .footer {
+      background-color: #34495e;
+      color: white;
+      padding: 25px 35px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .footer p {
+      margin: 8px 0;
+      opacity: 0.9;
+    }
+    .footer .divider {
+      margin: 15px auto;
+      width: 50%;
+      border-top: 1px solid rgba(255,255,255,0.3);
+    }
+    @media only screen and (max-width: 600px) {
+      .content {
+        padding: 30px 20px;
+      }
+      .detail-row {
+        flex-direction: column;
+      }
+      .detail-label {
+        margin-bottom: 5px;
+      }
+      .button {
+        display: block;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="email-container">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo-placeholder">
+          🎓
+        </div>
+        <h1>Certificate of Completion</h1>
+        <p>Official Document</p>
+      </div>
+      
+      <!-- Content -->
+      <div class="content">
+        <p class="formal-greeting">Dear <strong>{{RECIPIENT_NAME}}</strong>,</p>
+        
+        <p>This is to certify that you have successfully completed the following program offered by {{ORGANIZATION_NAME}}.</p>
+        
+        <p>Your dedication and commitment to learning are hereby formally recognized through this official certificate of completion.</p>
+        
+        <!-- Certificate Details -->
+        <div class="certificate-details">
+          <h2>Certificate Information</h2>
+          <div class="detail-row">
+            <div class="detail-label">Recipient:</div>
+            <div class="detail-value">{{RECIPIENT_NAME}}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Program:</div>
+            <div class="detail-value">{{EVENT_NAME}}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Certificate Number:</div>
+            <div class="detail-value">{{CERTIFICATE_ID}}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Date of Issuance:</div>
+            <div class="detail-value">{{ISSUE_DATE}}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Issuing Organization:</div>
+            <div class="detail-value">{{ORGANIZATION_NAME}}</div>
+          </div>
+        </div>
+        
+        <p>This certificate may be verified at any time through our official validation system using the certificate number provided above.</p>
+        
+        <!-- Action Buttons -->
+        <div class="button-container">
+          <a href="{{VALIDATION_URL}}" class="button">Verify Authenticity</a>
+          {{#if PDF_URL}}
+          <a href="{{PDF_URL}}" class="button">Download Official PDF</a>
+          {{/if}}
+        </div>
+        
+        <p>We congratulate you on this achievement and wish you continued success in your professional development.</p>
+        
+        <div class="signature">
+          <p>Sincerely,</p>
+          <p><strong>{{ORGANIZATION_NAME}}</strong></p>
+          <p style="font-size: 13px; margin-top: 15px;">Google Developer Groups on Campus</p>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="footer">
+        <p><strong>OFFICIAL COMMUNICATION</strong></p>
+        <div class="divider"></div>
+        <p>This is an automated notification from our certification system.</p>
+        <p>For inquiries, please contact your chapter administrator.</p>
+        <p style="margin-top: 15px;">&copy; {{YEAR}} Google Developer Groups on Campus</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

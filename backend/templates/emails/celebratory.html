@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Achievement Unlocked!</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #2c3e50;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 0;
+    }
+    .email-wrapper {
+      width: 100%;
+      padding: 30px 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .header {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+      position: relative;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 36px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .header .emoji {
+      font-size: 60px;
+      display: block;
+      margin-bottom: 10px;
+      animation: bounce 1s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .greeting {
+      font-size: 20px;
+      color: #764ba2;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .content p {
+      margin-bottom: 15px;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+    .achievement-box {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      border-radius: 12px;
+      padding: 25px;
+      margin: 25px 0;
+      text-align: center;
+    }
+    .achievement-box h2 {
+      margin: 0 0 15px;
+      color: #c0392b;
+      font-size: 24px;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 15px;
+      min-width: 120px;
+    }
+    .stat-icon {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #7f8c8d;
+      text-transform: uppercase;
+    }
+    .stat-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    .button-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .button {
+      display: inline-block;
+      padding: 16px 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white !important;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 16px;
+      margin: 8px;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    .button-secondary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+    }
+    .next-steps {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 25px 0;
+    }
+    .next-steps h3 {
+      margin: 0 0 15px;
+      color: #764ba2;
+      font-size: 20px;
+    }
+    .next-steps ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .next-steps li {
+      padding: 8px 0;
+      padding-left: 30px;
+      position: relative;
+    }
+    .next-steps li:before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: #764ba2;
+      font-weight: bold;
+    }
+    .footer {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px 30px;
+      text-align: center;
+    }
+    .footer p {
+      margin: 8px 0;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    @media only screen and (max-width: 600px) {
+      .email-container {
+        border-radius: 0;
+      }
+      .header h1 {
+        font-size: 28px;
+      }
+      .stats {
+        flex-direction: column;
+      }
+      .button {
+        display: block;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="email-container">
+      <!-- Header -->
+      <div class="header">
+        <span class="emoji">🎊</span>
+        <h1>Congratulations!</h1>
+      </div>
+      
+      <!-- Content -->
+      <div class="content">
+        <p class="greeting">Hey {{RECIPIENT_NAME}}! 👋</p>
+        
+        <p>You've successfully completed <strong>{{EVENT_NAME}}</strong> and we couldn't be more excited for you! 🚀</p>
+        
+        <!-- Achievement Box -->
+        <div class="achievement-box">
+          <h2>🏆 Your Achievement</h2>
+          <p style="font-size: 24px; font-weight: bold; color: #c0392b; margin: 15px 0;">
+            {{EVENT_NAME}}
+          </p>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-icon">✅</span>
+            <div class="stat-label">Status</div>
+            <div class="stat-value">Completed</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">📜</span>
+            <div class="stat-label">Certificate</div>
+            <div class="stat-value">Earned</div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon">🚀</span>
+            <div class="stat-label">Skills</div>
+            <div class="stat-value">Upgraded</div>
+          </div>
+        </div>
+        
+        <p><strong>Certificate ID:</strong> {{CERTIFICATE_ID}}</p>
+        
+        <p>Share your achievement with the world and inspire others! 🌟</p>
+        
+        <!-- Action Buttons -->
+        <div class="button-container">
+          <a href="{{VALIDATION_URL}}" class="button">🎉 View Certificate</a>
+          {{#if PDF_URL}}
+          <a href="{{PDF_URL}}" class="button button-secondary">💾 Download PDF</a>
+          {{/if}}
+        </div>
+        
+        <!-- Next Steps -->
+        <div class="next-steps">
+          <h3>What's Next? 🎯</h3>
+          <ul>
+            <li>Explore advanced courses and workshops</li>
+            <li>Join our community events</li>
+            <li>Earn more certifications</li>
+            <li>Share your journey on social media</li>
+          </ul>
+        </div>
+        
+        <p>Keep the momentum going! You're doing amazing! 💪</p>
+        
+        <p>With excitement,<br>
+        <strong>{{ORGANIZATION_NAME}} Team</strong></p>
+      </div>
+      
+      <!-- Footer -->
+      <div class="footer">
+        <p>🌟 <strong>Google Developer Groups on Campus</strong> 🌟</p>
+        <p>Building the next generation of developers</p>
+        <p style="margin-top: 15px; font-size: 11px;">
+          This is an automated email. Please do not reply.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -251,7 +251,7 @@ For certificate customization and email delivery:
 
 - **[documentation/certificate-templates.md](documentation/certificate-templates.md)** - Create and customize certificate templates
 - **[documentation/smtp-provider-setup.md](documentation/smtp-provider-setup.md)** - Configure SMTP providers (Brevo, Gmail, SendGrid, etc.)
-- **[documentation/nginx-proxy-manager-setup.md](documentation/nginx-proxy-manager-setup.md)** - Set up Nginx Proxy Manager with authentik
+- **[documentation/email-templates.md](documentation/email-templates.md)** - Choose and customize email templates for leaders
 
 ### Quick Start
 

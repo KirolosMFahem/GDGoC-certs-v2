@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Certificate - {{EVENT_NAME}}</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .email-wrapper {
+      width: 100%;
+      background-color: #f4f4f4;
+      padding: 20px 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .header {
+      background-color: #4285f4;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 300;
+    }
+    .header p {
+      margin: 10px 0 0;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .content p {
+      margin-bottom: 15px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .content strong {
+      color: #1a73e8;
+    }
+    .certificate-info {
+      background-color: #f8f9fa;
+      border-left: 4px solid #4285f4;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 4px;
+    }
+    .certificate-info p {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+    .certificate-info .label {
+      font-weight: bold;
+      color: #666;
+    }
+    .button-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .button {
+      display: inline-block;
+      padding: 14px 32px;
+      background-color: #4285f4;
+      color: white !important;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 16px;
+      margin: 8px;
+      transition: background-color 0.3s;
+    }
+    .button:hover {
+      background-color: #3367d6;
+    }
+    .button-secondary {
+      background-color: #34a853;
+    }
+    .button-secondary:hover {
+      background-color: #2d8e47;
+    }
+    .footer {
+      background-color: #f8f9fa;
+      padding: 25px 30px;
+      text-align: center;
+      border-top: 1px solid #e8eaed;
+    }
+    .footer p {
+      margin: 8px 0;
+      font-size: 13px;
+      color: #5f6368;
+    }
+    .footer .divider {
+      margin: 15px 0;
+      border-top: 1px solid #e8eaed;
+    }
+    @media only screen and (max-width: 600px) {
+      .email-container {
+        border-radius: 0;
+      }
+      .content {
+        padding: 30px 20px;
+      }
+      .header h1 {
+        font-size: 26px;
+      }
+      .button {
+        display: block;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="email-container">
+      <!-- Header -->
+      <div class="header">
+        <h1>🎉 Congratulations!</h1>
+        <p>Your certificate is ready</p>
+      </div>
+      
+      <!-- Content -->
+      <div class="content">
+        <p>Dear <strong>{{RECIPIENT_NAME}}</strong>,</p>
+        
+        <p>Congratulations on successfully completing <strong>{{EVENT_NAME}}</strong>!</p>
+        
+        <p>Your certificate has been generated and is ready for verification. This certificate validates your participation and achievement in our program.</p>
+        
+        <!-- Certificate Information Box -->
+        <div class="certificate-info">
+          <p><span class="label">Certificate ID:</span> {{CERTIFICATE_ID}}</p>
+          <p><span class="label">Event:</span> {{EVENT_NAME}}</p>
+          <p><span class="label">Issued:</span> {{ISSUE_DATE}}</p>
+          <p><span class="label">Organization:</span> {{ORGANIZATION_NAME}}</p>
+        </div>
+        
+        <p>You can validate your certificate at any time using the button below. Keep your Certificate ID safe for future reference.</p>
+        
+        <!-- Action Buttons -->
+        <div class="button-container">
+          <a href="{{VALIDATION_URL}}" class="button">📜 Validate Certificate</a>
+          {{#if PDF_URL}}
+          <a href="{{PDF_URL}}" class="button button-secondary">⬇️ Download PDF</a>
+          {{/if}}
+        </div>
+        
+        <p>Best regards,<br>
+        <strong>{{ORGANIZATION_NAME}} Team</strong></p>
+      </div>
+      
+      <!-- Footer -->
+      <div class="footer">
+        <p>This is an automated email. Please do not reply to this message.</p>
+        <div class="divider"></div>
+        <p><strong>Google Developer Groups on Campus</strong></p>
+        <p>Building the next generation of developers</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
