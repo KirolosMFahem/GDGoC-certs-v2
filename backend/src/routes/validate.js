@@ -1,5 +1,6 @@
 import express from 'express';
 import pool from '../db/index.js';
+import { validationLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ const router = express.Router();
  * Public endpoint to validate a certificate
  * NO AUTHENTICATION REQUIRED
  */
-router.get('/:uniqueId', async (req, res) => {
+router.get('/:uniqueId', validationLimiter, async (req, res) => {
   const { uniqueId } = req.params;
 
   try {

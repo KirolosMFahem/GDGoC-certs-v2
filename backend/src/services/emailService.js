@@ -12,6 +12,23 @@ const transporter = nodemailer.createTransport({
 });
 
 /**
+ * Escape HTML to prevent XSS attacks
+ * @param {string} text - Text to escape
+ * @returns {string} Escaped HTML
+ */
+function escapeHtml(text) {
+  if (!text) return '';
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+/**
  * Send certificate email to recipient
  * @param {Object} params - Email parameters
  * @param {string} params.to - Recipient email
@@ -26,7 +43,13 @@ export async function sendCertificateEmail({ to, recipientName, eventName, uniqu
     throw new Error('Missing required parameters for sending certificate email');
   }
 
-  const validationUrl = `https://certs.gdg-oncampus.dev/?cert=${uniqueId}`;
+  // Escape user-provided values to prevent XSS
+  const safeRecipientName = escapeHtml(recipientName);
+  const safeEventName = escapeHtml(eventName);
+  const safeUniqueId = escapeHtml(uniqueId);
+  const safePdfUrl = pdfUrl ? escapeHtml(pdfUrl) : null;
+
+  const validationUrl = `https://certs.gdg-oncampus.dev/?cert=${encodeURIComponent(uniqueId)}`;
   
   const htmlContent = `
     <!DOCTYPE html>
@@ -47,15 +70,15 @@ export async function sendCertificateEmail({ to, recipientName, eventName, uniqu
           <h1>🎉 Congratulations!</h1>
         </div>
         <div class="content">
-          <p>Dear ${recipientName},</p>
-          <p>Congratulations on completing <strong>${eventName}</strong>!</p>
+          <p>Dear ${safeRecipientName},</p>
+          <p>Congratulations on completing <strong>${safeEventName}</strong>!</p>
           <p>Your certificate has been generated and is ready for verification.</p>
-          <p><strong>Certificate ID:</strong> ${uniqueId}</p>
+          <p><strong>Certificate ID:</strong> ${safeUniqueId}</p>
           <p>You can validate your certificate at any time using the link below:</p>
           <p style="text-align: center;">
             <a href="${validationUrl}" class="button">Validate Certificate</a>
           </p>
-          ${pdfUrl ? `<p style="text-align: center;"><a href="${pdfUrl}" class="button">Download PDF</a></p>` : ''}
+          ${safePdfUrl ? `<p style="text-align: center;"><a href="${safePdfUrl}" class="button">Download PDF</a></p>` : ''}
           <p>Keep this certificate ID safe for future reference.</p>
           <p>Best regards,<br>GDGoC Team</p>
         </div>
@@ -71,7 +94,7 @@ export async function sendCertificateEmail({ to, recipientName, eventName, uniqu
   const mailOptions = {
     from: process.env.SMTP_FROM || '"GDGoC Certificates" <noreply@gdg-oncampus.dev>',
     to,
-    subject: `Your Certificate for ${eventName}`,
+    subject: `Your Certificate for ${safeEventName}`,
     html: htmlContent,
     text: `Congratulations ${recipientName}! Your certificate for ${eventName} has been generated. Certificate ID: ${uniqueId}. Validate at: ${validationUrl}`,
   };

@@ -1,6 +1,7 @@
 import express from 'express';
 import pool from '../db/index.js';
 import { extractAuthentikUser } from '../middleware/auth.js';
+import { authLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const router = express.Router();
  * Get or create authenticated user
  * Protected by authentik via NPM
  */
-router.get('/me', extractAuthentikUser, async (req, res) => {
+router.get('/me', authLimiter, extractAuthentikUser, async (req, res) => {
   const { ocid, name, email } = req.user;
 
   try {

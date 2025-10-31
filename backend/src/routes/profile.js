@@ -1,6 +1,7 @@
 import express from 'express';
 import pool from '../db/index.js';
 import { extractAuthentikUser } from '../middleware/auth.js';
+import { apiLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const router = express.Router();
  * Update user profile (name and org_name)
  * Protected by authentik via NPM
  */
-router.put('/', extractAuthentikUser, async (req, res) => {
+router.put('/', apiLimiter, extractAuthentikUser, async (req, res) => {
   const { ocid } = req.user;
   const { name, org_name } = req.body;
 
@@ -73,7 +74,7 @@ router.put('/', extractAuthentikUser, async (req, res) => {
  * Get current user profile
  * Protected by authentik via NPM
  */
-router.get('/', extractAuthentikUser, async (req, res) => {
+router.get('/', apiLimiter, extractAuthentikUser, async (req, res) => {
   const { ocid } = req.user;
 
   try {
