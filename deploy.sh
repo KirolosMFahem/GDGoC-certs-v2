@@ -26,6 +26,21 @@ if ! docker compose version &> /dev/null; then
     exit 1
 fi
 
+# Check if .env exists (root directory)
+if [ ! -f ".env" ]; then
+    echo -e "${YELLOW}Warning: .env not found in root directory${NC}"
+    echo "Creating from .env.example..."
+    if [ -f ".env.example" ]; then
+        cp .env.example .env
+        echo -e "${YELLOW}Please edit .env with your configuration (especially PostgreSQL password)${NC}"
+        echo "Press Enter to continue after editing, or Ctrl+C to cancel..."
+        read
+    else
+        echo -e "${RED}Error: .env.example not found${NC}"
+        exit 1
+    fi
+fi
+
 # Check if backend/.env exists
 if [ ! -f "backend/.env" ]; then
     echo -e "${YELLOW}Warning: backend/.env not found${NC}"

@@ -19,18 +19,34 @@ This guide explains how to deploy the GDGoC Certificate Generator using Docker C
 Create environment files from examples:
 
 ```bash
+# Root environment for Docker Compose
+cp .env.example .env
+
 # Backend environment
 cp backend/.env.example backend/.env
+
+# Edit .env with your configuration
+nano .env
 
 # Edit backend/.env with your configuration
 nano backend/.env
 ```
+
+**Important**: Update the following in `.env` (root directory):
+- `POSTGRES_PASSWORD` - **Change this to a strong password for production**
+- `POSTGRES_USER` - Database user (default: postgres)
+- `POSTGRES_DB` - Database name (default: gdgoc_certs)
+- `DB_PASSWORD` - **Must match POSTGRES_PASSWORD**
+- Frontend build arguments (`VITE_API_URL`, `VITE_ADMIN_HOSTNAME`, `VITE_PUBLIC_HOSTNAME`)
 
 **Important**: Update the following in `backend/.env`:
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` - Your Brevo SMTP credentials
 - `SMTP_FROM` - Your sender email address
 - `ALLOWED_ORIGINS` - Your frontend hostnames (comma-separated)
 - `PUBLIC_HOSTNAME` - Your public validation hostname
+- Database credentials (can also be set in root .env file)
+
+**Security Note**: The database password is now configurable via environment variables. Always use a strong, unique password in production.
 
 ### 2. Build and Start Services
 
@@ -120,27 +136,36 @@ See the comprehensive [PORT_REFERENCE.md](PORT_REFERENCE.md) guide.
 
 ## Configuration
 
-### Environment Variables for Build
+### Root Environment Variables (.env)
 
-When building the frontend, you can pass build arguments:
-
-```bash
-docker compose build --build-arg VITE_API_URL=https://api.your-domain.com frontend
-```
-
-Or set them in a `.env` file in the root directory:
+The root `.env` file contains Docker Compose configuration:
 
 ```env
+# Frontend Build Arguments
 VITE_API_URL=https://api.certs.gdg-oncampus.dev
 VITE_ADMIN_HOSTNAME=sudo.certs-admin.certs.gdg-oncampus.dev
 VITE_PUBLIC_HOSTNAME=certs.gdg-oncampus.dev
+
+# PostgreSQL Database Configuration
+POSTGRES_DB=gdgoc_certs
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=change_this_secure_password_in_production  # CHANGE THIS!
+
+# Database connection for backend (should match PostgreSQL values)
+DB_HOST=db
+DB_PORT=5432
+DB_NAME=gdgoc_certs
+DB_USER=postgres
+DB_PASSWORD=change_this_secure_password_in_production  # CHANGE THIS!
 ```
+
+**Security Critical**: Always change `POSTGRES_PASSWORD` and `DB_PASSWORD` to a strong, unique password in production. These values should match.
 
 ### Backend Environment Variables
 
 See `backend/.env.example` for all available options. Key variables:
 
-- **Database**: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
+- **Database**: Database credentials can be configured in root `.env` or `backend/.env`
 - **Server**: `PORT`, `NODE_ENV`
 - **CORS**: `ALLOWED_ORIGINS` (comma-separated list)
 - **SMTP**: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`

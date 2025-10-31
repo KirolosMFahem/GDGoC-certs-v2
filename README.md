@@ -241,8 +241,10 @@ Docker deployment configuration is available for production use. See the followi
 
 ```bash
 # 1. Configure environment
+cp .env.example .env
 cp backend/.env.example backend/.env
-# Edit backend/.env with your settings
+# Edit .env with database passwords and settings
+# Edit backend/.env with SMTP and application settings
 
 # 2. Start services
 ./deploy.sh up
@@ -251,7 +253,11 @@ cp backend/.env.example backend/.env
 ./deploy.sh status
 ```
 
-**Important**: No ports are exposed to the host by default. Services communicate through the internal `gdgoc-net` Docker network. Configure Nginx Proxy Manager to provide external access (see PORT_REFERENCE.md).
+**Important**: 
+- Change the PostgreSQL password in `.env` before deploying to production
+- No ports are exposed to the host by default
+- Services communicate through the internal `gdgoc-net` Docker network
+- Configure Nginx Proxy Manager to provide external access (see PORT_REFERENCE.md)
 
 ### Docker Network
 

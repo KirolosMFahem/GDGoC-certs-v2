@@ -13,14 +13,25 @@ This guide helps you get started with the GDGoC Certificate Generator using Dock
 ### 1. Prepare Environment
 
 ```bash
+# Create root environment file
+cp .env.example .env
+
 # Create backend environment file
 cp backend/.env.example backend/.env
 
-# Edit with your settings
+# Edit root .env with your settings
+nano .env
+
+# Edit backend .env with your settings
 nano backend/.env
 ```
 
-**Required settings to update:**
+**Required settings to update in `.env` (root):**
+- **POSTGRES_PASSWORD** - Change to a strong password
+- **DB_PASSWORD** - Must match POSTGRES_PASSWORD
+- VITE_API_URL, VITE_ADMIN_HOSTNAME, VITE_PUBLIC_HOSTNAME (your domains)
+
+**Required settings to update in `backend/.env`:**
 - SMTP credentials (Brevo)
 - ALLOWED_ORIGINS (your domain names)
 - PUBLIC_HOSTNAME (your public domain)
