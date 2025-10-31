@@ -38,3 +38,12 @@ coverage/
 .cache/
 .temp/
 tmp/
+
+# Docker
+docker-compose.override.yml
+
+# Backups
+backups/
+*.sql
+
+

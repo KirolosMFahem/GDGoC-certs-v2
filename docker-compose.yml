@@ -1,0 +1,78 @@
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: gdgoc-db
+    environment:
+      POSTGRES_DB: gdgoc_certs
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - gdgoc-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gdgoc-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=gdgoc_certs
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - PORT=3001
+      - NODE_ENV=production
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - gdgoc-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend (React + Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-https://api.certs.gdg-oncampus.dev}
+        - VITE_ADMIN_HOSTNAME=${VITE_ADMIN_HOSTNAME:-sudo.certs-admin.certs.gdg-oncampus.dev}
+        - VITE_PUBLIC_HOSTNAME=${VITE_PUBLIC_HOSTNAME:-certs.gdg-oncampus.dev}
+    container_name: gdgoc-frontend
+    depends_on:
+      - backend
+    networks:
+      - gdgoc-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  gdgoc-net:
+    name: gdgoc-net
+    driver: bridge
+
+volumes:
+  postgres_data:
+    name: gdgoc-postgres-data

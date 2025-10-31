@@ -231,7 +231,24 @@ The backend is configured to only accept requests from:
 
 ## Deployment
 
-The deployment configuration (Docker Compose, Dockerfiles) will be maintained on a separate `deployment` branch.
+Docker deployment configuration is available for production use. See the following guides:
+
+- **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for Docker deployment
+- **[DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md)** - Complete Docker deployment documentation
+
+### Quick Start
+
+```bash
+# 1. Configure environment
+cp backend/.env.example backend/.env
+# Edit backend/.env with your settings
+
+# 2. Start services
+./deploy.sh up
+
+# 3. Check status
+./deploy.sh status
+```
 
 ### Docker Network
 
