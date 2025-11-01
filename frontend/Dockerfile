@@ -9,6 +9,10 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
+# Use `npm install` when a lockfile isn't present. Prefer committing a package-lock.json
+# for reproducible builds; see README steps below to add one.
+RUN npm install
+
 # Install dependencies
 RUN npm ci
 
