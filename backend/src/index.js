@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile.js';
 import certificatesRoutes from './routes/certificates.js';
 import validateRoutes from './routes/validate.js';
+import emailTemplatesRoutes from './routes/emailTemplates.js';
 import { verifyEmailService } from './services/emailService.js';
 
 // Load environment variables
@@ -65,6 +66,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/certificates', certificatesRoutes);
 app.use('/api/validate', validateRoutes);
+app.use('/api/templates/email', emailTemplatesRoutes);
 
 // 404 handler
 app.use((req, res) => {

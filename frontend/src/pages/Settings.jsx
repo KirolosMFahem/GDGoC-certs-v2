@@ -85,8 +85,11 @@ export default function Settings() {
                 type="text"
                 value={user?.org_name || ''}
                 disabled
+                className="locked-field"
               />
-              <small>Organization name cannot be changed</small>
+              <small className="warning-text">
+                ⚠️ Organization name cannot be changed. Contact support if changes are needed.
+              </small>
             </div>
 
             <div className="input-group">

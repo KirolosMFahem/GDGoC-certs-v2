@@ -102,6 +102,25 @@ Complete guide for creating and customizing email templates for certificate deli
 - Handlebars syntax for dynamic content
 - Mobile-responsive design
 
+### [leader-features.md](leader-features.md)
+Complete guide for leaders (administrators) covering profile management, organization settings, and email template customization.
+
+**Contents:**
+- Profile setup (first login) with organization name lock
+- Settings and profile management
+- Email template customization with online code editor
+- Organization name change policy and support ticket process
+- Template variable system and conditional logic
+- Template management (create, edit, delete, set default)
+- Security considerations and access control
+
+**Key Topics:**
+- Organization name cannot be changed after first login (requires support ticket)
+- Leaders can change their name anytime in settings
+- Online code editor for email template customization
+- Template selection and per-organization preferences
+- Support ticket workflow for organization name changes
+
 ## Quick Start
 
 Follow these guides in order:
