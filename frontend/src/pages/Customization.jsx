@@ -421,7 +421,7 @@ export default function Customization() {
                     </div>
 
                     <div className="editor-help">
-                      <strong>Available Variables:</strong> {{`{{RECIPIENT_NAME}}`}}, {{`{{EVENT_NAME}}`}}, {{`{{CERTIFICATE_ID}}`}}, {{`{{VALIDATION_URL}}`}}, {{`{{ISSUE_DATE}}`}}, {{`{{ORGANIZATION_NAME}}`}}, {{`{{PDF_URL}}`}}, {{`{{CUSTOM_MESSAGE}}`}}
+                      <strong>Available Variables:</strong>{' '} {'{{RECIPIENT_NAME}}'},{' '}{'{{EVENT_NAME}}'},{' '}{'{{CERTIFICATE_ID}}'},{' '}{'{{VALIDATION_URL}}'},{' '}{'{{ISSUE_DATE}}'},{' '}{'{{ORGANIZATION_NAME}}'},{' '}{'{{PDF_URL}}'},{' '}{'{{CUSTOM_MESSAGE}}'}
                     </div>
 
                     <CodeEditor
