@@ -28,7 +28,13 @@
   font-size: 1.1rem;
 }
 
-.settings-btn {
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.settings-btn,
+.customization-btn {
   background: rgba(255, 255, 255, 0.2);
   color: white;
   border: none;
@@ -40,7 +46,8 @@
   transition: background-color 0.3s;
 }
 
-.settings-btn:hover {
+.settings-btn:hover,
+.customization-btn:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 

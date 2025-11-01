@@ -1,0 +1,21 @@
+# Docker Compose override for local development
+# This file is automatically merged with docker-compose.yml
+# Copy this to docker-compose.override.yml and customize as needed
+
+services:
+  backend:
+    # Override env_file requirement for local testing
+    env_file: []
+    environment:
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-gdgoc_certs}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - PORT=3001
+      - NODE_ENV=development
+      - ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost
+      - PUBLIC_HOSTNAME=localhost
+      # Add development SMTP settings here if needed
+      - SMTP_HOST=smtp-relay.brevo.com
+      - SMTP_PORT=587

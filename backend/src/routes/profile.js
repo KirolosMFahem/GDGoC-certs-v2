@@ -9,6 +9,11 @@ const router = express.Router();
  * PUT /api/profile
  * Update user profile (name and org_name)
  * Protected by authentik via NPM
+ * 
+ * Rules:
+ * - Name can be changed anytime
+ * - org_name can only be set once (first login)
+ * - After org_name is set, it's locked and requires support ticket to change
  */
 router.put('/', apiLimiter, extractAuthentikUser, async (req, res) => {
   const { ocid } = req.user;
@@ -23,6 +28,30 @@ router.put('/', apiLimiter, extractAuthentikUser, async (req, res) => {
   }
 
   try {
+    // Get current user data to check if org_name is already set
+    const userResult = await pool.query(
+      'SELECT org_name, org_name_set_at FROM allowed_leaders WHERE ocid = $1',
+      [ocid]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({
+        error: 'Not found',
+        message: 'User not found'
+      });
+    }
+
+    const currentUser = userResult.rows[0];
+
+    // Check if trying to change org_name when it's already set
+    if (org_name && currentUser.org_name && currentUser.org_name_set_at) {
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'Organization name cannot be changed once set. Please submit a support ticket if you need to change it.',
+        code: 'ORG_NAME_LOCKED'
+      });
+    }
+
     // Build dynamic update query
     const updates = [];
     const values = [];
@@ -35,10 +64,17 @@ router.put('/', apiLimiter, extractAuthentikUser, async (req, res) => {
     }
 
     if (org_name) {
+      // Setting org_name for the first time
       updates.push(`org_name = $${paramCount}`);
       values.push(org_name);
       paramCount++;
+      
+      // Set the lock timestamp
+      updates.push(`org_name_set_at = CURRENT_TIMESTAMP`);
     }
+
+    // Always update the updated_at timestamp
+    updates.push(`updated_at = CURRENT_TIMESTAMP`);
 
     values.push(ocid);
 
@@ -46,7 +82,7 @@ router.put('/', apiLimiter, extractAuthentikUser, async (req, res) => {
       UPDATE allowed_leaders 
       SET ${updates.join(', ')}
       WHERE ocid = $${paramCount}
-      RETURNING *
+      RETURNING ocid, name, email, org_name, org_name_set_at, can_login, created_at, updated_at
     `;
 
     const result = await pool.query(query, values);

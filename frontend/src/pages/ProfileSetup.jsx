@@ -70,7 +70,7 @@ export default function ProfileSetup() {
           </div>
 
           <div className="input-group">
-            <label htmlFor="org_name">Organization Name</label>
+            <label htmlFor="org_name">Organization Name *</label>
             <input
               id="org_name"
               type="text"
@@ -80,7 +80,9 @@ export default function ProfileSetup() {
               disabled={loading}
               required
             />
-            <small>This cannot be changed later</small>
+            <small className="warning-text">
+              ⚠️ <strong>Important:</strong> This cannot be changed later without a support ticket
+            </small>
           </div>
 
           <button type="submit" disabled={loading} className="submit-btn">

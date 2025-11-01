@@ -231,7 +231,49 @@ The backend is configured to only accept requests from:
 
 ## Deployment
 
-The deployment configuration (Docker Compose, Dockerfiles) will be maintained on a separate `deployment` branch.
+Docker deployment configuration is available for production use. See the following guides:
+
+- **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide for Docker deployment
+- **[DOCKER_DEPLOYMENT.md](DOCKER_DEPLOYMENT.md)** - Complete Docker deployment documentation
+- **[PORT_REFERENCE.md](PORT_REFERENCE.md)** - Port configuration and Nginx Proxy Manager setup
+- **[documentation/](documentation/)** - Comprehensive setup guides
+
+### Authentication & Reverse Proxy Setup
+
+For production deployment with authentication:
+
+- **[documentation/authentik-setup.md](documentation/authentik-setup.md)** - Configure authentik as proxy provider
+- **[documentation/nginx-proxy-manager-setup.md](documentation/nginx-proxy-manager-setup.md)** - Set up Nginx Proxy Manager with authentik
+
+### Certificate Templates & Email Setup
+
+For certificate customization and email delivery:
+
+- **[documentation/certificate-templates.md](documentation/certificate-templates.md)** - Create and customize certificate templates
+- **[documentation/smtp-provider-setup.md](documentation/smtp-provider-setup.md)** - Configure SMTP providers (Brevo, Gmail, SendGrid, etc.)
+- **[documentation/email-templates.md](documentation/email-templates.md)** - Choose and customize email templates for leaders
+
+### Quick Start
+
+```bash
+# 1. Configure environment
+cp .env.example .env
+cp backend/.env.example backend/.env
+# Edit .env with database passwords and settings
+# Edit backend/.env with SMTP and application settings
+
+# 2. Start services
+./deploy.sh up
+
+# 3. Check status
+./deploy.sh status
+```
+
+**Important**: 
+- Change the PostgreSQL password in `.env` before deploying to production
+- No ports are exposed to the host by default
+- Services communicate through the internal `gdgoc-net` Docker network
+- Configure Nginx Proxy Manager to provide external access (see PORT_REFERENCE.md)
 
 ### Docker Network
 

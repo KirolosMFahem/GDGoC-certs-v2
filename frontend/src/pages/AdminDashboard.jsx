@@ -119,9 +119,14 @@ export default function AdminDashboard() {
           <p>Welcome, {user?.name}</p>
           <p className="org-name">{user?.org_name}</p>
         </div>
-        <button onClick={() => navigate('/admin/settings')} className="settings-btn">
-          ⚙️ Settings
-        </button>
+        <div className="header-actions">
+          <button onClick={() => navigate('/admin/customization')} className="customization-btn">
+            🎨 Customization
+          </button>
+          <button onClick={() => navigate('/admin/settings')} className="settings-btn">
+            ⚙️ Settings
+          </button>
+        </div>
       </div>
 
       <div className="dashboard-content">

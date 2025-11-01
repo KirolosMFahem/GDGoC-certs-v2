@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import ProfileSetup from '../pages/ProfileSetup';
 import AdminDashboard from '../pages/AdminDashboard';
 import Settings from '../pages/Settings';
+import Customization from '../pages/Customization';
 import './AdminApp.css';
 
 function ProtectedRoute({ children }) {
@@ -81,6 +82,14 @@ export default function AdminApp() {
           <ProtectedRoute>
             <RequireOrgName>
               <Settings />
+            </RequireOrgName>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/admin/customization" element={
+          <ProtectedRoute>
+            <RequireOrgName>
+              <Customization />
             </RequireOrgName>
           </ProtectedRoute>
         } />

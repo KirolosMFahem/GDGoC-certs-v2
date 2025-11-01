@@ -1,0 +1,100 @@
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: gdgoc-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-gdgoc_certs}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - gdgoc-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Port 5432 is NOT exposed to host - accessible only via gdgoc-net network
+    # To expose for direct access: uncomment the line below
+    # ports:
+    #   - "5432:5432"
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: gdgoc-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-gdgoc_certs}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - PORT=3001
+      - NODE_ENV=production
+      - SMTP_HOST=${SMTP_HOST:-smtp-relay.brevo.com}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_SECURE=${SMTP_SECURE:-starttls}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - SMTP_FROM=${SMTP_FROM:-"GDGoC Certificates" <noreply@gdg-oncampus.dev>}
+      - PUBLIC_HOSTNAME=${PUBLIC_HOSTNAME:-certs.gdg-oncampus.dev}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-https://sudo.certs-admin.certs.gdg-oncampus.dev,https://certs.gdg-oncampus.dev}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - gdgoc-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 3001 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # Port 3001 is NOT exposed to host - accessible only via gdgoc-net network
+    # Nginx Proxy Manager should forward to http://backend:3001
+    # To expose for direct access: uncomment the line below
+    # ports:
+    #   - "3001:3001"
+
+  # Frontend (React + Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=${VITE_API_URL:-https://api.certs.gdg-oncampus.dev}
+        - VITE_ADMIN_HOSTNAME=${VITE_ADMIN_HOSTNAME:-sudo.certs-admin.certs.gdg-oncampus.dev}
+        - VITE_PUBLIC_HOSTNAME=${VITE_PUBLIC_HOSTNAME:-certs.gdg-oncampus.dev}
+    container_name: gdgoc-frontend
+    depends_on:
+      - backend
+    networks:
+      - gdgoc-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 80 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    # Port 80 is NOT exposed to host - accessible only via gdgoc-net network
+    # Nginx Proxy Manager should forward to http://frontend:80
+    # To expose for direct access: uncomment the line below
+    # ports:
+    #   - "8080:80"
+
+networks:
+  gdgoc-net:
+    name: gdgoc-net
+    driver: bridge
+
+volumes:
+  postgres_data:
+    name: gdgoc-postgres-data
