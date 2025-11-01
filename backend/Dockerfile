@@ -7,6 +7,10 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
+# Use `npm install --omit=dev` when a lockfile isn't present. Prefer committing a package-lock.json
+# for reproducible builds; see README steps below to add one.
+RUN npm install --omit=dev
+
 # Install dependencies (production only)
 RUN npm ci --only=production
 
